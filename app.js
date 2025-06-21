@@ -69,24 +69,24 @@ app.get("/posts/:testing",function(req,res){
   //     }); 
   //   }
   // });
-  Blog.findOne({title: customPost},function(err,obj){
-    if(err){
+  Blog.findOne({title: customPost}, function(err, obj) {
+    if (err) {
       console.log("Error Found");
+      return res.status(500).send("Database error");
     }
-    else{
-      console.log(obj);
-      if(_.lowerCase(customPost) === _.lowerCase(obj.title)){
-      res.render("post",{
-        postTitle:obj.title,
-        postBody:obj.body
+
+    if (!obj) {
+      return res.status(404).render("post", {
+        postTitle: "Post Not Found",
+        postBody: ""
       });
-     }
-     else{
-       console.log("Did not match");
-     }
-
     }
 
+    console.log(obj);
+    res.render("post", {
+      postTitle: obj.title,
+      postBody: obj.body
+    });
   });
 });
 app.post("/compose",function(req,res){
